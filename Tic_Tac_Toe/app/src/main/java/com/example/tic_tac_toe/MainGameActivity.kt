@@ -116,7 +116,7 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
 
                                                     if (grid[row][column] == -1) {
                                                         grid[row][column] = 0
-                                                        buttonText[row * 3 + column] = "0"
+                                                        buttonText[row * 3 + column] = "O"
 
                                                         winner = solverUtils.solver(grid)
 
@@ -157,7 +157,7 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                         Text(
                             text = buttonText[rowIndex * 3 + columnIndex],
                             color = Blue,
-                            fontSize = 24.sp,
+                            fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
 
