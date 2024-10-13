@@ -30,9 +30,12 @@ class MainGameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            //    val key = intent.getStringExtra("key_name") ?: "DefaultGameName" //For string data
+            val algo = intent.getIntExtra("key_value", 0)
+
             TicTacToeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainGameScreen(modifier = Modifier.padding(innerPadding))
+                    MainGameScreen(modifier = Modifier.padding(innerPadding),algo)
                 }
             }
         }
@@ -42,7 +45,7 @@ class MainGameActivity : AppCompatActivity() {
 
 
 @Composable
-fun MainGameScreen(modifier: Modifier = Modifier) {
+fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
     val solverUtils = SolverUtils()
 
     // State variables
@@ -53,6 +56,7 @@ fun MainGameScreen(modifier: Modifier = Modifier) {
 
     // Get the context for showing Toast messages
     val context = LocalContext.current
+
 
     // Handle winner state and reset the game after a delay
     LaunchedEffect(winner) {
@@ -105,12 +109,34 @@ fun MainGameScreen(modifier: Modifier = Modifier) {
                                         // PC Move Logic
                                         var pcMoveMade = false
                                         while (!pcMoveMade) {
-                                            val randomRow = Random.nextInt(0, 3)
-                                            val randomColumn = Random.nextInt(0, 3)
+                                            var location= arrayOf(-1,-1)
+                                            var row=-1
+                                            var column=-1
+                                            if(algo==2){
+                                                location=solverUtils.hardalgo(grid)
+                                                row=location[0]
+                                                column=location[1]
+                                                if(row==-1 || column==-1){
+                                                    location=solverUtils.mediumalgo(grid)
+                                                    row=location[0]
+                                                    column=location[1]
+                                                }
+                                            }
+                                            else if(algo==1){
+                                                location=solverUtils.mediumalgo(grid)
+                                                row=location[0]
+                                                column=location[1]
 
-                                            if (grid[randomRow][randomColumn] == -1) {
-                                                grid[randomRow][randomColumn] = 0
-                                                buttonText[randomRow * 3 + randomColumn] = "0"
+                                            }
+                                            //Easy algo
+                                            if(row==-1 || column==-1) {
+                                                row = Random.nextInt(0, 3)
+                                                column = Random.nextInt(0, 3)
+                                            }
+
+                                            if (grid[row][column] == -1) {
+                                                grid[row][column] = 0
+                                                buttonText[row * 3 + column] = "0"
 
                                                 winner = solverUtils.solver(grid)
     //                                            if (winner != "Continue Game") {
@@ -186,6 +212,9 @@ fun MainGameScreen(modifier: Modifier = Modifier) {
 @Composable
 fun MainGameScreenPreview() {
     TicTacToeTheme {
-        MainGameScreen()
+        MainGameScreen(
+//            key = "Preview Game",  // Default value for preview
+            algo = 0               // Default value for preview
+        )
     }
 }

@@ -1,8 +1,8 @@
 package com.example.tic_tac_toe
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.example.tic_tac_toe.ui.theme.TicTacToeTheme
 import kotlin.random.Random
 
@@ -39,6 +38,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("RememberReturnType")
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -60,7 +60,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -70,7 +69,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(top = 150.dp)
-                .padding(bottom = 250.dp))
+                .padding(bottom = 130.dp))
         Button(
             onClick = {
             /*TODO*/
@@ -80,11 +79,50 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
             },
             modifier = Modifier
-                .padding(16.dp)
+                .padding(bottom = 20.dp)
+
 
         ) {
             Text(
-                text = "Play",
+                text = "Easy",
+                modifier = Modifier
+                    .padding(8.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = {
+            /*TODO*/
+                val intent = Intent(context, MainGameActivity::class.java)
+                intent.putExtra("key_value", 1)
+                context.startActivity(intent)
+
+
+            },
+            modifier = Modifier
+                .padding(bottom =20.dp)
+
+        ) {
+            Text(
+                text = "Medium",
+                modifier = Modifier
+                    .padding(8.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = {
+            /*TODO*/
+                val intent = Intent(context, MainGameActivity::class.java)
+                intent.putExtra("key_value", 2)
+                context.startActivity(intent)
+            }
+
+        ) {
+            Text(
+                text = "Hard",
                 modifier = Modifier
                     .padding(8.dp),
                 fontSize = 16.sp,

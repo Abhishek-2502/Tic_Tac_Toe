@@ -122,4 +122,203 @@ class SolverUtils {
 
         return "Continue Game"
     }
+
+    fun mediumalgo(grid: Array<Array<Int>>) : Array<Int>{
+        var location = arrayOf(-1,-1)
+        var count1 : Int = 0
+        var countminus1 : Int = 0
+        // Horizontal
+        for (row in 0..2) {
+            for(col in 0..2){
+                if (grid[row][col] == 1){
+                    count1++
+                }
+                else if(grid[row][col] == -1){
+                    location[0]=row
+                    location[1]=col
+                    countminus1++
+                }
+                if(count1==2 && countminus1==1){
+                    println("Med Found horizontal")
+                    return location
+                }
+            }
+            count1=0
+            countminus1=0
+        }
+
+        // Vertical
+        for (col in 0..2) {
+            for(row in 0..2){
+                if (grid[row][col] == 1){
+                    count1++
+                }
+                else if(grid[row][col] == -1){
+                    location[0]=row
+                    location[1]=col
+                    countminus1++
+                }
+                if(count1==2 && countminus1==1){
+                    println("Med Found vertical")
+                    return location
+                }
+            }
+            count1=0
+            countminus1=0
+        }
+
+        // Diagonal1
+        for(i in 0..2){
+            if (grid[i][i ] == 1){
+                count1++
+            }
+            else if(grid[i][i] == -1){
+                location[0]=i
+                location[1]=i
+                countminus1++
+            }
+            if(count1==2 && countminus1==1){
+                println("Med Found d1")
+                return location
+            }
+        }
+
+        count1=0
+        countminus1=0
+
+        // Digonal2
+        if (grid[0][2 ] == 1){
+            count1++
+        }
+        else if(grid[0][2] == -1){
+            location[0]=0
+            location[1]=2
+            countminus1++
+        }
+        if (grid[1][1 ] == 1){
+            count1++
+        }
+        else if(grid[1][1] == -1){
+            location[0]=1
+            location[1]=1
+            countminus1++
+        }
+        if (grid[2][0] == 1){
+            count1++
+        }
+        else if(grid[2][0] == -1){
+            location[0]=2
+            location[1]=0
+            countminus1++
+        }
+        if(count1==2 && countminus1==1){
+            println("Med Found d2")
+            return location
+        }
+
+        //Not found
+        location[0]=-1
+        location[1]=-1
+        return location
+    }
+
+    fun hardalgo(grid: Array<Array<Int>>) : Array<Int>{
+        var location = arrayOf(-1,-1)
+        var count0 : Int = 0
+        var countminus1 : Int = 0
+        // Horizontal
+        for (row in 0..2) {
+            for(col in 0..2){
+                if (grid[row][col] == 0){
+                    count0++
+                }
+                else if(grid[row][col] == -1){
+                    location[0]=row
+                    location[1]=col
+                    countminus1++
+                }
+                if(count0==2 && countminus1==1){
+                    println("Hard Found horizontal")
+                    return location
+                }
+            }
+            count0=0
+            countminus1=0
+        }
+
+        // Vertical
+        for (col in 0..2) {
+            for(row in 0..2){
+                if (grid[row][col] == 0){
+                    count0++
+                }
+                else if(grid[row][col] == -1){
+                    location[0]=row
+                    location[1]=col
+                    countminus1++
+                }
+                if(count0==2 && countminus1==1){
+                    println("Hard Found vertical")
+                    return location
+                }
+            }
+            count0=0
+            countminus1=0
+        }
+
+        // Diagonal1
+        for(i in 0..2){
+            if (grid[i][i ] == 0){
+                count0++
+            }
+            else if(grid[i][i] == -1){
+                location[0]=i
+                location[1]=i
+                countminus1++
+            }
+            if(count0==2 && countminus1==1){
+                println("Hard Found d1")
+                return location
+            }
+        }
+
+        count0=0
+        countminus1=0
+
+        // Digonal2
+        if (grid[0][2 ] == 0){
+            count0++
+        }
+        else if(grid[0][2] == -1){
+            location[0]=0
+            location[1]=2
+            countminus1++
+        }
+        if (grid[1][1 ] == 0){
+            count0++
+        }
+        else if(grid[1][1] == -1){
+            location[0]=1
+            location[1]=1
+            countminus1++
+        }
+        if (grid[2][0] == 0){
+            count0++
+        }
+        else if(grid[2][0] == -1){
+            location[0]=2
+            location[1]=0
+            countminus1++
+        }
+        if(count0==2 && countminus1==1){
+            println("Hard Found d2")
+            return location
+        }
+
+        //Not found
+        location[0]=-1
+        location[1]=-1
+
+        return location
+    }
 }
