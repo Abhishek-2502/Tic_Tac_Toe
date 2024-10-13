@@ -121,7 +121,8 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                                                         winner = solverUtils.solver(grid)
 
                                                         pcMoveMade = true // PC made a move
-                                                        gameActive = winner == "Continue Game"
+                                                        gameActive = true
+                                                        winner = "Continue Game"
                                                     }
                                                 }
 
@@ -133,7 +134,6 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                                         else{
                                             gameActive = false
                                             handler.postDelayed({
-                                                gameActive = false
                                                 // Reset the game state
                                                 grid = Array(3) { Array(3) { -1 } } // Reset grid state
                                                 buttonText.fill("") // Reset button text
