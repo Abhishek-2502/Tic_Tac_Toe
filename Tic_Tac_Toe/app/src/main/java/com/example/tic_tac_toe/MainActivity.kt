@@ -132,7 +132,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(8.dp),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
         Button(
@@ -142,11 +142,31 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 intent.putExtra("key_value", 3)
                 intent.putExtra("key_string", "Extreme")
                 context.startActivity(intent)
-            }
+            },
+            modifier = Modifier
+                .padding(bottom =20.dp)
 
         ) {
             Text(
                 text = "Extreme",
+                modifier = Modifier
+                    .padding(8.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = {
+            /*TODO*/
+                val intent = Intent(context, MainGameActivity::class.java)
+                intent.putExtra("key_value", 4)
+                intent.putExtra("key_string", "Human VS Human")
+                context.startActivity(intent)
+            }
+
+        ) {
+            Text(
+                text = "Human VS Human",
                 modifier = Modifier
                     .padding(8.dp),
                 fontSize = 16.sp,

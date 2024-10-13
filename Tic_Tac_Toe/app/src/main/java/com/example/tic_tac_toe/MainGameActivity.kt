@@ -53,6 +53,7 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int,levelstr: String) {
     var grid by remember { mutableStateOf(Array(3) { Array(3) { -1 } }) }
     val buttonText = remember { mutableStateListOf(*Array(3 * 3) { "" }) }
     var winner by remember { mutableStateOf("") }
+    var chance by remember { mutableStateOf(1) }
     var gameActive by remember { mutableStateOf(true) }
 
     // Get the context for showing Toast messages
@@ -84,80 +85,95 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int,levelstr: String) {
                 repeat(3) { columnIndex ->
                     Button(
                         onClick = {
-                                    if (gameActive && grid[rowIndex][columnIndex] == -1) {
-                                        grid[rowIndex][columnIndex] = 1
-                                        buttonText[rowIndex * 3 + columnIndex] = "X" // Update button text
+                            if (gameActive && grid[rowIndex][columnIndex] == -1) {
 
-                                        winner = solverUtils.solver(grid)
+                                if (algo == 4 && chance % 2 == 0) {
+                                    grid[rowIndex][columnIndex] = 0
+                                    buttonText[rowIndex * 3 + columnIndex] = "O" // Update button text
+                                }
+                                else {
+                                    grid[rowIndex][columnIndex] = 1
+                                    buttonText[rowIndex * 3 + columnIndex] = "X" // Update button text
+                                }
+                                chance++
 
-                                        // No Winner (PC Chance)
-                                        if(winner=="Continue Game"){
-                                            gameActive = false
-//                                            handler.postDelayed({
-                                                // PC Move Logic
-                                                var pcMoveMade = false
-                                                while (!pcMoveMade) {
-                                                    var location= arrayOf(-1,-1)
-                                                    var row=-1
-                                                    var column=-1
-                                                    //Minimax algorithm
-                                                    if(algo==3){
-                                                        location=solverUtils.findBestMove(grid)
-                                                        row=location[0]
-                                                        column=location[1]
-                                                    }
-                                                    //Hard algorithm
-                                                    else if(algo==2){
-                                                        location=solverUtils.hardalgo(grid)
-                                                        row=location[0]
-                                                        column=location[1]
-                                                        if(row==-1 || column==-1){
-                                                            location=solverUtils.mediumalgo(grid)
-                                                            row=location[0]
-                                                            column=location[1]
-                                                        }
-                                                    }
-                                                    //Medium algoritm
-                                                    else if(algo==1){
-                                                        location=solverUtils.mediumalgo(grid)
-                                                        row=location[0]
-                                                        column=location[1]
+                                winner = solverUtils.solver(grid)
 
-                                                    }
-                                                    //Easy algorithm
-                                                    if(row==-1 || column==-1) {
-                                                        row = Random.nextInt(0, 3)
-                                                        column = Random.nextInt(0, 3)
-                                                    }
-
-                                                    if (grid[row][column] == -1) {
-                                                        grid[row][column] = 0
-                                                        buttonText[row * 3 + column] = "O"
-
-                                                        winner = solverUtils.solver(grid)
-
-                                                        pcMoveMade = true // PC made a move
-                                                        gameActive = winner == "Continue Game"
-                                                    }
+                                // No Winner (PC Chance)
+                                if (algo != 4) {
+                                    if (winner == "Continue Game") {
+                                        gameActive = false
+    //                                            handler.postDelayed({
+                                        // PC Move Logic
+                                        var pcMoveMade = false
+                                        while (!pcMoveMade) {
+                                            var location = arrayOf(-1, -1)
+                                            var row = -1
+                                            var column = -1
+                                            //Minimax algorithm
+                                            if (algo == 3) {
+                                                location = solverUtils.findBestMove(grid)
+                                                row = location[0]
+                                                column = location[1]
+                                            }
+                                            //Hard algorithm
+                                            else if (algo == 2) {
+                                                location = solverUtils.hardalgo(grid)
+                                                row = location[0]
+                                                column = location[1]
+                                                if (row == -1 || column == -1) {
+                                                    location = solverUtils.mediumalgo(grid)
+                                                    row = location[0]
+                                                    column = location[1]
                                                 }
+                                            }
+                                            //Medium algoritm
+                                            else if (algo == 1) {
+                                                location = solverUtils.mediumalgo(grid)
+                                                row = location[0]
+                                                column = location[1]
 
-//                                            }, 500)
+                                            }
+                                            //Easy algorithm
+                                            if (row == -1 || column == -1) {
+                                                row = Random.nextInt(0, 3)
+                                                column = Random.nextInt(0, 3)
+                                            }
 
+                                            if (grid[row][column] == -1) {
+                                                grid[row][column] = 0
+                                                buttonText[row * 3 + column] = "O"
+
+                                                winner = solverUtils.solver(grid)
+
+                                                pcMoveMade = true // PC made a move
+                                                gameActive = winner == "Continue Game"
+                                            }
                                         }
+    //                                            }, 500)
+                                    }
+                                }
 
-                                        //Winner Found
-                                        if(winner!="Continue Game"){
-                                            gameActive = false
-                                            handler.postDelayed({
-                                                // Reset the game state
-                                                grid = Array(3) { Array(3) { -1 } } // Reset grid state
-                                                buttonText.fill("") // Reset button text
-                                                winner = ""
-                                                gameActive = true
-                                            },1500)
+                                //Winner Found
+                                if (winner != "Continue Game") {
+                                    if(algo==4){
+                                        if(winner=="Human"){
+                                            winner="Winner: X"
+                                        }
+                                        else if(winner=="PC"){
+                                            winner="Winner: O"
                                         }
                                     }
-
+                                    gameActive = false
+                                    handler.postDelayed({
+                                        // Reset the game state
+                                        grid = Array(3) { Array(3) { -1 } } // Reset grid state
+                                        buttonText.fill("") // Reset button text
+                                        winner = ""
+                                        gameActive = true
+                                    }, 1500)
+                                }
+                        }
                                   },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
