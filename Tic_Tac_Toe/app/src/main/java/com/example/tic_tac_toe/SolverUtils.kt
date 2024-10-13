@@ -321,4 +321,95 @@ class SolverUtils {
 
         return location
     }
+
+    // Minimax algorithm implementation (FIND BEST MOVE)
+    fun minimax(grid: Array<Array<Int>>, depth: Int, isMaximizing: Boolean): Int {
+        val score = evaluate(grid)
+
+        if (score == 10) return score - depth // PC's winning
+        if (score == -10) return score + depth // Human's winning
+        if (isDraw(grid)) return 0 // Draw
+
+        return if (isMaximizing) {
+            var bestValue = Int.MIN_VALUE
+            for (row in 0..2) {
+                for (col in 0..2) {
+                    if (grid[row][col] == -1) {
+                        grid[row][col] = 0 // PC move
+                        bestValue = maxOf(bestValue, minimax(grid, depth + 1, false))
+                        grid[row][col] = -1 // Undo move
+                    }
+                }
+            }
+            bestValue
+        } else {
+            var bestValue = Int.MAX_VALUE
+            for (row in 0..2) {
+                for (col in 0..2) {
+                    if (grid[row][col] == -1) {
+                        grid[row][col] = 1 // Human move
+                        bestValue = minOf(bestValue, minimax(grid, depth + 1, true))
+                        grid[row][col] = -1 // Undo move
+                    }
+                }
+            }
+            bestValue
+        }
+    }
+
+    fun findBestMove(grid: Array<Array<Int>>): Array<Int> {
+        var bestVal = Int.MIN_VALUE
+        var bestMove = arrayOf(-1, -1)
+
+        for (row in 0..2) {
+            for (col in 0..2) {
+                if (grid[row][col] == -1) {
+                    grid[row][col] = 0 // PC move
+                    val moveVal = minimax(grid, 0, false)
+                    grid[row][col] = -1 // Undo move
+
+                    if (moveVal > bestVal) {
+                        bestMove[0] = row
+                        bestMove[1] = col
+                        bestVal = moveVal
+                    }
+                }
+            }
+        }
+        return bestMove
+    }
+
+    private fun evaluate(grid: Array<Array<Int>>): Int {
+        // Check rows, columns, and diagonals for a win
+        for (row in 0..2) {
+            if (grid[row][0] == grid[row][1] && grid[row][0] == grid[row][2]) {
+                if (grid[row][0] == 0) return 10 // PC win
+                if (grid[row][0] == 1) return -10 // Human win
+            }
+        }
+
+        for (col in 0..2) {
+            if (grid[0][col] == grid[1][col] && grid[0][col] == grid[2][col]) {
+                if (grid[0][col] == 0) return 10 // PC win
+                if (grid[0][col] == 1) return -10 // Human win
+            }
+        }
+
+        // Diagonal checks
+        if (grid[0][0] == grid[1][1] && grid[0][0] == grid[2][2]) {
+            if (grid[0][0] == 0) return 10 // PC win
+            if (grid[0][0] == 1) return -10 // Human win
+        }
+
+        if (grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0]) {
+            if (grid[0][2] == 0) return 10 // PC win
+            if (grid[0][2] == 1) return -10 // Human win
+        }
+
+        return 0 // No winner
+    }
+
+    private fun isDraw(grid: Array<Array<Int>>): Boolean {
+        return grid.flatten().none { it == -1 }
+    }
 }

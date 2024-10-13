@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tic_tac_toe.ui.theme.*
-import kotlinx.coroutines.time.delay
 import kotlin.random.Random
+
 
 
 class MainGameActivity : AppCompatActivity() {
@@ -32,12 +31,12 @@ class MainGameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            //    val key = intent.getStringExtra("key_name") ?: "DefaultGameName" //For string data
+            val levelstr = intent.getStringExtra("key_string") ?: "Tic Tac Toe"
             val algo = intent.getIntExtra("key_value", 0)
 
             TicTacToeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainGameScreen(modifier = Modifier.padding(innerPadding),algo)
+                    MainGameScreen(modifier = Modifier.padding(innerPadding),algo,levelstr)
                 }
             }
         }
@@ -47,7 +46,7 @@ class MainGameActivity : AppCompatActivity() {
 
 
 @Composable
-fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
+fun MainGameScreen(modifier: Modifier = Modifier,algo: Int,levelstr: String) {
     val solverUtils = SolverUtils()
 
     // State variables
@@ -66,8 +65,17 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 200.dp)
+            .padding(top = 50.dp)
     ) {
+        Text(
+            text = "$levelstr",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color = Blue,
+            modifier = Modifier
+                .padding(bottom=150.dp)
+        )
+
         val buttonSize = 100.dp
 
         // Creating rows of buttons
@@ -85,14 +93,21 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                                         // No Winner (PC Chance)
                                         if(winner=="Continue Game"){
                                             gameActive = false
-                                            handler.postDelayed({
+//                                            handler.postDelayed({
                                                 // PC Move Logic
                                                 var pcMoveMade = false
                                                 while (!pcMoveMade) {
                                                     var location= arrayOf(-1,-1)
                                                     var row=-1
                                                     var column=-1
-                                                    if(algo==2){
+                                                    //Minimax algorithm
+                                                    if(algo==3){
+                                                        location=solverUtils.findBestMove(grid)
+                                                        row=location[0]
+                                                        column=location[1]
+                                                    }
+                                                    //Hard algorithm
+                                                    else if(algo==2){
                                                         location=solverUtils.hardalgo(grid)
                                                         row=location[0]
                                                         column=location[1]
@@ -102,13 +117,14 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                                                             column=location[1]
                                                         }
                                                     }
+                                                    //Medium algoritm
                                                     else if(algo==1){
                                                         location=solverUtils.mediumalgo(grid)
                                                         row=location[0]
                                                         column=location[1]
 
                                                     }
-                                                    //Easy algo
+                                                    //Easy algorithm
                                                     if(row==-1 || column==-1) {
                                                         row = Random.nextInt(0, 3)
                                                         column = Random.nextInt(0, 3)
@@ -121,17 +137,16 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                                                         winner = solverUtils.solver(grid)
 
                                                         pcMoveMade = true // PC made a move
-                                                        gameActive = true
-                                                        winner = "Continue Game"
+                                                        gameActive = winner == "Continue Game"
                                                     }
                                                 }
 
-                                            }, 500) // 1 second delay for PC move
+//                                            }, 500)
 
                                         }
 
                                         //Winner Found
-                                        else{
+                                        if(winner!="Continue Game"){
                                             gameActive = false
                                             handler.postDelayed({
                                                 // Reset the game state
@@ -141,8 +156,6 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
                                                 gameActive = true
                                             },1500)
                                         }
-
-
                                     }
 
                                   },
@@ -204,13 +217,15 @@ fun MainGameScreen(modifier: Modifier = Modifier,algo: Int) {
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 fun MainGameScreenPreview() {
     TicTacToeTheme {
         MainGameScreen(
-//            key = "Preview Game",  // Default value for preview
+            levelstr = "level",  // Default value for preview
             algo = 0               // Default value for preview
         )
     }
 }
+

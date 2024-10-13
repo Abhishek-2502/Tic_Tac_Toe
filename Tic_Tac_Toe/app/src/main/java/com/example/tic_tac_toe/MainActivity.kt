@@ -69,11 +69,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(top = 150.dp)
-                .padding(bottom = 130.dp))
+                .padding(bottom = 100.dp))
         Button(
             onClick = {
             /*TODO*/
                 val intent = Intent(context, MainGameActivity::class.java)
+                intent.putExtra("key_value", 0)
+                intent.putExtra("key_string", "Easy")
                 context.startActivity(intent)
 
 
@@ -96,6 +98,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             /*TODO*/
                 val intent = Intent(context, MainGameActivity::class.java)
                 intent.putExtra("key_value", 1)
+                intent.putExtra("key_string", "Medium")
                 context.startActivity(intent)
 
 
@@ -117,12 +120,33 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             /*TODO*/
                 val intent = Intent(context, MainGameActivity::class.java)
                 intent.putExtra("key_value", 2)
+                intent.putExtra("key_string", "Hard")
+                context.startActivity(intent)
+            },
+            modifier = Modifier
+                .padding(bottom =20.dp)
+
+        ) {
+            Text(
+                text = "Hard",
+                modifier = Modifier
+                    .padding(8.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = {
+            /*TODO*/
+                val intent = Intent(context, MainGameActivity::class.java)
+                intent.putExtra("key_value", 3)
+                intent.putExtra("key_string", "Extreme")
                 context.startActivity(intent)
             }
 
         ) {
             Text(
-                text = "Hard",
+                text = "Extreme",
                 modifier = Modifier
                     .padding(8.dp),
                 fontSize = 16.sp,
